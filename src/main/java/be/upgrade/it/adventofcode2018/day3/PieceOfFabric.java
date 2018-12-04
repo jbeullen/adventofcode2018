@@ -38,5 +38,24 @@ public class PieceOfFabric {
         return count;
     }
 
-    
+    public boolean isClaimIntact(Claim claim){
+        int startX = claim.getX();
+        int stopX = startX + claim.getWidth();
+
+        int startY = claim.getY();
+        int stopY = startY + claim.getHeight();
+
+        int id = claim.getId();
+
+        for (int i = startX; i < stopX; i++) {
+            int[] row = fabric[i];
+            for (int j = startY; j < stopY; j++) {
+                if(row[j] == -1) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
