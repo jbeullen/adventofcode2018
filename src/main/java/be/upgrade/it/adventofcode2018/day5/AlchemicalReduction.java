@@ -12,18 +12,23 @@ public class AlchemicalReduction {
         String input = CommonUtils.resourceToStringList(INPUT)[0];
 
         AlchemicalReduction alchemicalReduction = new AlchemicalReduction();
-        boolean keepGoing = true;
-        String toProcess = input;
-        while(keepGoing){
-            String output = alchemicalReduction.processReactions(toProcess);
-            if(StringUtils.equals(output, toProcess)){
-                keepGoing = false;
-            } else {
-                toProcess = output;
+        String output = alchemicalReduction.processFullPolymerReactions(input);
+
+        System.out.println("Solution Part 1: "+output.length());
+
+        String shortest = input;
+        for (int i = 0; i < 26; i++) {
+            char[] chars = alchemicalReduction.calculateCombination(i);
+
+            String clean = alchemicalReduction.removeCombination(input, chars);
+
+            String out = alchemicalReduction.processFullPolymerReactions(clean);
+            if(out.length() < shortest.length()){
+                shortest = out;
             }
         }
 
-        System.out.println("Solution Part 1: "+toProcess.length());
+        System.out.println("Solution Part 2: "+shortest.length());
 
     }
 
@@ -43,5 +48,38 @@ public class AlchemicalReduction {
             }
         }
         return StringUtils.remove(new String(chars), ' ');
+    }
+
+    public String processFullPolymerReactions(String input){
+        boolean keepGoing = true;
+        String toProcess = input;
+        while(keepGoing){
+            String output = processReactions(toProcess);
+            if(StringUtils.equals(output, toProcess)){
+                keepGoing = false;
+            } else {
+                toProcess = output;
+            }
+        }
+
+        return toProcess;
+    }
+
+    public String removeCombination(String input, char[] chars){
+        String output = input;
+        for (char c : chars) {
+            output = StringUtils.remove(output, c);
+        }
+        return output;
+    }
+
+    public char[] calculateCombination(int i){
+        int upperHash = 65+i;
+        int lowerHash = upperHash+32;
+        char[] chars = new char[2];
+        chars[0] = (char) upperHash;
+        chars[1] = (char) lowerHash;
+
+        return chars;
     }
 }
